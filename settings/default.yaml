@@ -1,0 +1,51 @@
+# Input/Output/Name
+image_dir: "dataset/preprocessed_data"
+train_data: "dataset/train.txt"
+val_data: "dataset/val.txt"
+tokenizer: "dataset/tokenizer.pkl"
+model_path: "checkpoints"
+name: "transformer-ocr test"
+
+# Training parameters
+epochs: 60
+batch_size: 16
+
+# Optimizer configurations
+optimizer: "AdamW"
+lr: 2e-4
+scheduler: null
+
+# Parameters for model architectures
+width: 896
+height: 224
+channels: 3
+
+# Encoder
+encoder_dim: 96
+patch_size: 4
+window_size: 7
+encoder_depth: [2, 2, 6, 2]
+encoder_heads: [3, 6, 12, 24]
+
+# Decoder
+decoder_dim: 768
+decoder_heads: 8
+decoder_depth: 4
+decoder_cfg: 
+  cross_attend: true
+  ff_glu: false
+  attn_on_attn: false
+  use_scalenorm: false
+  rel_pos_bias: false
+max_seq_len: 64
+
+# Other
+seed: 42
+temperature: 0.2
+pad: False
+
+# Token ids
+pad_token: 0
+bos_token: 1
+eos_token: 2
+oov_token: 3
