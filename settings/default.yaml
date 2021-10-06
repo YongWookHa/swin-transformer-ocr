@@ -1,5 +1,5 @@
 # Input/Output/Name
-image_dir: "dataset/preprocessed_data"
+image_dir: "dataset/images"
 train_data: "dataset/train.txt"
 val_data: "dataset/val.txt"
 tokenizer: "dataset/tokenizer.pkl"
