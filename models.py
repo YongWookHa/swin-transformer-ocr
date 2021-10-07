@@ -46,18 +46,22 @@ class SwinTransformerOCR(pl.LightningModule):
         optimizer = optimizer(self.parameters(), lr=float(self.cfg.lr))
 
         if not self.cfg.scheduler:
-            return optimizer
+            scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer, lr_lambda=lambda x: x)
+            scheduler = {
+                'scheduler': scheduler, 'interval': "epoch", "name": "learning rate"
+            }
+            return [optimizer], [scheduler]
         elif hasattr(torch.optim.lr_scheduler, self.cfg.scheduler):
             scheduler = getattr(torch.optim.lr_scheduler, self.cfg.scheduler)
         elif hasattr(utils, self.cfg.scheduler):
             scheduler = getattr(utils, self.cfg.scheduler)
         else:
             raise ModuleNotFoundError
-        
+
         scheduler = {
             'scheduler': scheduler(optimizer, **self.cfg.scheduler_param),
             'interval': self.cfg.scheduler_interval,
-            'name': self.cfg.scheduler
+            'name': "learning rate"
             }
         return [optimizer], [scheduler]
 
@@ -144,9 +148,9 @@ class CustomSwinTransformer(SwinTransformer):
 
     def forward_features(self, x):
         x = self.patch_embed(x)
-        
+
         x = self.pos_drop(x)
-        
+
         x = self.layers(x)
         x = self.norm(x)  # B L C
 
