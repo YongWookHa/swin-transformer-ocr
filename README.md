@@ -47,3 +47,15 @@ tensorboard --log_dir tb_logs --bind_all
 It's not really hard to add prediction function to the pytorch-lightning module with fully-trained model. I will leave it empty for now. But I would glady do it if there's any request.
 
 enjoy the code.
+
+## Citations
+
+```bibtex
+@misc{liu-2021,
+    title   = {Swin Transformer: Hierarchical Vision Transformer using Shifted Windows},
+	author  = {Ze Liu and Yutong Lin and Yue Cao and Han Hu and Yixuan Wei and Zheng Zhang and Stephen Lin and Baining Guo},
+	year    = {2021},
+    eprint  = {2103.14030},
+	archivePrefix = {arXiv}
+}
+```
