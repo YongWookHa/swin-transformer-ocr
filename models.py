@@ -46,7 +46,7 @@ class SwinTransformerOCR(pl.LightningModule):
         optimizer = optimizer(self.parameters(), lr=float(self.cfg.lr))
 
         if not self.cfg.scheduler:
-            scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer, lr_lambda=lambda x: x)
+            scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer, lr_lambda=lambda x: 1)
             scheduler = {
                 'scheduler': scheduler, 'interval': "epoch", "name": "learning rate"
             }
