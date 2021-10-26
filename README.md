@@ -46,6 +46,8 @@ tensorboard --log_dir tb_logs --bind_all
 ## Predict
 It's not really hard to add prediction function to the pytorch-lightning module with fully-trained model. I will leave it empty for now. But I would glady do it if there's any request.
 
+_Predict code request has been received. The code will be updated by early Nov._
+
 enjoy the code.
 
 ## Citations
