@@ -41,4 +41,4 @@ if __name__ == "__main__":
     for image_fn in target:
         start = time.time()
         x = collate.ready_image(image_fn)
-        print("[{}]sec | image_fn : {}".format(time.time()-start, model.predict(x)))
+        print("[{}]sec | image_fn {} : {}".format(time.time()-start, image_fn, model.predict(x)))
