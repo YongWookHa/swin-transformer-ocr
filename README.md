@@ -43,12 +43,14 @@ You can check your training log with tensorboard.
 tensorboard --log_dir tb_logs --bind_all
 ```  
 
-## Predict
-It's not really hard to add prediction function to the pytorch-lightning module with fully-trained model. I will leave it empty for now. But I would glady do it if there's any request.
+## Predict  
+When your model finished training, you can use your model for prediction.
 
-_Predict code request has been received. The code will be updated by early Nov._
+```bash  
+python predict.py --setting <your_setting.yaml> --target <image_or_directory> --tokenizer <your_tokenizer_pkl> --checkpoint <saved_checkpoint>
+```
 
-enjoy the code.
+Enjoy the code.
 
 ## Citations
 
