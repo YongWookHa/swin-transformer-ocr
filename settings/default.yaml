@@ -3,7 +3,7 @@ image_dir: "dataset/images"
 train_data: "dataset/train.txt"
 val_data: "dataset/val.txt"
 tokenizer: "dataset/tokenizer.pkl"
-model_path: "checkpoints"
+save_path: "checkpoints"
 name: "transformer-ocr test"
 
 # Training parameters
@@ -13,7 +13,15 @@ batch_size: 16
 # Optimizer configurations
 optimizer: "AdamW"
 lr: 2e-4
-scheduler: null
+scheduler: null  # "CustomCosineAnnealingWarmUpRestarts"
+# scheduler_interval: "epoch"  # or "step"
+# scheduler_param:
+#   first_cycle_steps: 20  # epoch
+#   cycle_mult: 2
+#   max_lr: 0.003
+#   min_lr: 0.0000001
+#   warmup_steps: 1
+#   gamma: 0.5
 
 # Parameters for model architectures
 width: 896

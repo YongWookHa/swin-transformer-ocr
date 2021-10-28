@@ -35,8 +35,8 @@ if __name__ == "__main__":
     tokenizer = Tokenizer(train_set.token_id_dict)
 
     # ----- tokenizer -----
-    Path(cfg.model_path).mkdir(exist_ok=True)
-    save_path = "{}/{}.pkl".format(cfg.model_path, cfg.name.replace(' ', '_'))
+    Path(cfg.save_path).mkdir(exist_ok=True)
+    save_path = "{}/{}.pkl".format(cfg.save_path, cfg.name.replace(' ', '_'))
     save_tokenizer(tokenizer, save_path)
 
     train_collate = CustomCollate(cfg, tokenizer)
