@@ -139,6 +139,12 @@ class SwinTransformerOCR(pl.LightningModule):
 
         # custom text logging
         self.logger.log_text("wrong_case", "___".join(wrong_cases), self.global_step)
+        
+    def predict(self, image):        
+        dec = self(image)
+        pred = self.tokenizer.decode(dec)
+        return pred
+        
 
 
 class CustomSwinTransformer(SwinTransformer):

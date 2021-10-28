@@ -1,11 +1,11 @@
 import torch
 from torch.nn.utils.rnn import pad_sequence
-import albumentations as alb
-import cv2
-from albumentations.pytorch import ToTensorV2
-
-from PIL import Image
 from pathlib import Path
+import cv2
+import numpy as np
+from PIL import Image
+import albumentations as alb
+from albumentations.pytorch import ToTensorV2
 
 
 class CustomDataset(torch.utils.data.Dataset):
@@ -113,6 +113,18 @@ class CustomCollate(object):
         labels = self.tokenizer.encode(texts)
 
         return (images, labels)
+
+    def ready_image(self, image):
+        if isinstance(image, Path):
+            image = np.array(Image.open(image))
+        elif isinstance(image, Image.Image):
+            image = np.array(image)
+        elif isinstance(image, np.ndarray):
+            pass
+        else:
+            raise ValueError
+        image = self.transform(image=image)["image"].unsqueeze(0)
+        return image
 
 
 class Tokenizer:
