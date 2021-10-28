@@ -14,11 +14,16 @@ def load_setting(setting):
         cfg = yaml.load(f, Loader=yaml.FullLoader)
     return EasyDict(cfg)
 
-def save_tokenizer(tokenizer, save_path):
-    with open(save_path, 'wb') as f:
+def save_tokenizer(tokenizer, path):
+    with open(path, 'wb') as f:
         pickle.dump(tokenizer, f)
-    print("tokenizer saved in {}".format(save_path))
-
+    print("tokenizer saved in {}".format(path))
+    
+def load_tokenizer(path):
+    with open(path, 'rb') as f:
+        tokenizer = pickle.load(f)
+    print("tokenizer loaded from {}".format(path))
+    return tokenizer
 
 class CustomTensorBoardLogger(TensorBoardLogger):
     def __init__(self, *args, **kwargs):
