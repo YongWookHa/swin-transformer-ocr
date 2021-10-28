@@ -19,8 +19,6 @@ if __name__ == "__main__":
                         help="Load pre-built tokenizer")
     parser.add_argument("--num_workers", "-nw", type=int, default=0,
                         help="Number of workers for dataloader")
-    parser.add_argument("--batch_size", "-bs", type=int, default=4,
-                        help="Batch size for training and validate")
     parser.add_argument("--resume_train", "-rt", type=str, default="",
                         help="Resume train from certain checkpoint")
     args = parser.parse_args()
