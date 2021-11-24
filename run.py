@@ -19,6 +19,8 @@ if __name__ == "__main__":
                         help="Load pre-built tokenizer")
     parser.add_argument("--num_workers", "-nw", type=int, default=0,
                         help="Number of workers for dataloader")
+    parser.add_argument("--batch_size", "-bs", type=int, default=4,
+                        help="Batch size for training and validate")
     parser.add_argument("--resume_train", "-rt", type=str, default="",
                         help="Resume train from certain checkpoint")
     args = parser.parse_args()
@@ -33,9 +35,9 @@ if __name__ == "__main__":
     tokenizer = Tokenizer(train_set.token_id_dict)
 
     # ----- tokenizer -----
-    Path(cfg.save_path).mkdir(exist_ok=True)
-    save_path = "{}/{}.pkl".format(cfg.save_path, cfg.name.replace(' ', '_'))
-    save_tokenizer(tokenizer, save_path)
+    (Path(cfg.save_path) / f"version_{cfg.version}").mkdir(exist_ok=True)
+    save_path = "{}/{}/{}.pkl".format(cfg.save_path, f"version_{cfg.version}", cfg.name.replace(' ', '_'))
+    save_tokenizer(tokenizer,  save_path)
 
     train_collate = CustomCollate(cfg, tokenizer)
     val_collate = CustomCollate(cfg, tokenizer)
@@ -47,15 +49,12 @@ if __name__ == "__main__":
     cfg.num_train_step = len(train_dataloader)
     model = SwinTransformerOCR(cfg, tokenizer)
 
-    if cfg.resume_train:
-        model = model.load_from_checkpoint(cfg.resume_train)
-
     logger = CustomTensorBoardLogger("tb_logs", name="model", version=cfg.version,
                                      default_hp_metric=False)
 
     ckpt_callback = pl.callbacks.ModelCheckpoint(
         monitor="accuracy",
-        dirpath=f"checkpoints/version_{cfg.version}",
+        dirpath=f"{cfg.save_path}/version_{cfg.version}",
         filename="checkpoints-{epoch:02d}-{accuracy:.5f}",
         save_top_k=3,
         mode="max",
@@ -63,9 +62,13 @@ if __name__ == "__main__":
     lr_callback = pl.callbacks.LearningRateMonitor(logging_interval='step')
 
     device_cnt = torch.cuda.device_count()
-    trainer = pl.Trainer(gpus=device_cnt, max_epochs=cfg.epochs, logger=logger,
-        num_sanity_val_steps=1, accelerator="ddp" if device_cnt > 1 else None,
-        callbacks=[ckpt_callback, lr_callback],
-        resume_from_checkpoint=cfg.resume_train if cfg.resume_train else None)
+    strategy = pl.plugins.DDPPlugin(find_unused_parameters=False) if device_cnt > 1 else None
+    trainer = pl.Trainer(gpus=device_cnt,
+                         max_epochs=cfg.epochs,
+                         logger=logger,
+                         num_sanity_val_steps=1,
+                         strategy=strategy,
+                         callbacks=[ckpt_callback, lr_callback],
+                         resume_from_checkpoint=cfg.resume_train if cfg.resume_train else None)
 
     trainer.fit(model, train_dataloader=train_dataloader, val_dataloaders=valid_dataloader)
