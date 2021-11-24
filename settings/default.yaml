@@ -6,10 +6,6 @@ tokenizer: "dataset/tokenizer.pkl"
 save_path: "checkpoints"
 name: "transformer-ocr test"
 
-# Training parameters
-epochs: 60
-batch_size: 16
-
 # Optimizer configurations
 optimizer: "AdamW"
 lr: 2e-4
