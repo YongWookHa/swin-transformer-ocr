@@ -116,7 +116,7 @@ class CustomCollate(object):
 
     def ready_image(self, image):
         if isinstance(image, Path):
-            image = np.array(Image.open(image))
+            image = np.array(Image.open(image).convert('RGB'))
         elif isinstance(image, Image.Image):
             image = np.array(image)
         elif isinstance(image, np.ndarray):
