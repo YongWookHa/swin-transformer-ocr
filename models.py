@@ -21,7 +21,7 @@ class SwinTransformerOCR(pl.LightningModule):
                                         num_classes=0,
                                         window_size=cfg.window_size,
                                         embed_dim=cfg.encoder_dim,
-                                        depth=cfg.encoder_depth,
+                                        depths=cfg.encoder_depth,
                                         num_heads=cfg.encoder_heads
                                         )
         self.decoder = CustomARWrapper(
@@ -65,14 +65,6 @@ class SwinTransformerOCR(pl.LightningModule):
             }
         return [optimizer], [scheduler]
 
-    def make_len_mask(self, inp):
-        return (inp == 0).transpose(0, 1)
-
-    def generate_square_subsequent_mask(self, sz):
-        mask = torch.triu(torch.ones(sz, sz), 1)
-        mask = mask.masked_fill(mask==1, float('-inf'))
-        return mask
-
     def forward(self, x):
         '''
         x: (B, C, W, H)
@@ -87,7 +79,7 @@ class SwinTransformerOCR(pl.LightningModule):
         '''
 
         encoded = self.encoder(x)
-        dec = self.decoder.generate(torch.LongTensor([self.bos_token]*len(x))[:, None].to(x.device), self.max_seq_len,
+        dec = self.decoder.generate((torch.ones(x.size(0),1)*self.bos_token).long().to(x.device), self.max_seq_len,
                                     eos_token=self.eos_token, context=encoded, temperature=self.temperature)
         return dec
 
@@ -96,6 +88,7 @@ class SwinTransformerOCR(pl.LightningModule):
         tgt_seq, tgt_mask = y
         encoded = self.encoder(x)
         loss = self.decoder(tgt_seq, mask=tgt_mask, context=encoded)
+        self.log("train_loss", loss)
 
         return {'loss': loss}
 
@@ -139,12 +132,11 @@ class SwinTransformerOCR(pl.LightningModule):
 
         # custom text logging
         self.logger.log_text("wrong_case", "___".join(wrong_cases), self.global_step)
-        
-    def predict(self, image):        
+
+    def predict(self, image):
         dec = self(image)
         pred = self.tokenizer.decode(dec)
         return pred
-        
 
 
 class CustomSwinTransformer(SwinTransformer):
@@ -154,9 +146,7 @@ class CustomSwinTransformer(SwinTransformer):
 
     def forward_features(self, x):
         x = self.patch_embed(x)
-
         x = self.pos_drop(x)
-
         x = self.layers(x)
         x = self.norm(x)  # B L C
 
