@@ -71,4 +71,4 @@ if __name__ == "__main__":
                          callbacks=[ckpt_callback, lr_callback],
                          resume_from_checkpoint=cfg.resume_train if cfg.resume_train else None)
 
-    trainer.fit(model, train_dataloader=train_dataloader, val_dataloaders=valid_dataloader)
+    trainer.fit(model, train_dataloaders=train_dataloader, val_dataloaders=valid_dataloader)
