@@ -26,20 +26,21 @@ Markdown==3.3.4
 matplotlib==3.4.3
 multidict==5.2.0
 networkx==2.6.3
-numpy @ file:///D:/bld/numpy_1616933441329/work
+numpy==1.20.2
 oauthlib==3.1.1
-olefile @ file:///home/conda/feedstock_root/build_artifacts/olefile_1602866521163/work
+olefile==0.46
 opencv-python==4.5.4.58
 opencv-python-headless==4.5.4.58
 packaging==21.2
 Pillow==8.4.0
+pip==21.3.1
 protobuf==3.19.1
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
 pyDeprecate==0.3.1
 pyparsing==2.4.7
 python-dateutil==2.8.2
-pytorch-lightning==1.5.0
+pytorch-lightning==1.5.3
 PyWavelets==1.1.1
 PyYAML==6.0
 qudida==0.0.4
@@ -49,6 +50,7 @@ rsa==4.7.2
 scikit-image==0.18.3
 scikit-learn==1.0.1
 scipy==1.7.1
+setuptools==49.6.0.post20210108
 six==1.16.0
 tensorboard==2.7.0
 tensorboard-data-server==0.6.1
@@ -60,9 +62,10 @@ torch==1.8.1
 torchmetrics==0.6.0
 torchvision==0.9.1
 tqdm==4.62.3
-typing-extensions @ file:///home/conda/feedstock_root/build_artifacts/typing_extensions_1602702424206/work
+typing-extensions==3.7.4.3
 urllib3==1.26.7
 Werkzeug==2.0.2
+wheel==0.36.2
 wincertstore==0.2
 x-transformers==0.20.4
 yarl==1.7.2
