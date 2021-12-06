@@ -5,7 +5,7 @@ from pathlib import Path
 
 from models import SwinTransformerOCR
 from dataset import CustomDataset, CustomCollate, Tokenizer
-from utils import load_setting, save_tokenizer, CustomTensorBoardLogger
+from utils import load_setting, save_tokenizer, CustomTensorBoardLogger, load_tokenizer
 
 from torch.utils.data import DataLoader
 
@@ -32,15 +32,18 @@ if __name__ == "__main__":
     # ----- dataset -----
     train_set = CustomDataset(cfg, cfg.train_data)
     val_set = CustomDataset(cfg, cfg.val_data)
-    tokenizer = Tokenizer(train_set.token_id_dict)
 
     # ----- tokenizer -----
-    (Path(cfg.save_path) / f"version_{cfg.version}").mkdir(exist_ok=True)
-    save_path = "{}/{}/{}.pkl".format(cfg.save_path, f"version_{cfg.version}", cfg.name.replace(' ', '_'))
-    save_tokenizer(tokenizer,  save_path)
+    if cfg.load_tokenizer:
+        tokenizer = load_tokenizer(cfg.load_tokenizer)
+    else:
+        tokenizer = Tokenizer(train_set.token_id_dict)
+        (Path(cfg.save_path) / f"version_{cfg.version}").mkdir(exist_ok=True)
+        save_path = "{}/{}/{}.pkl".format(cfg.save_path, f"version_{cfg.version}", cfg.name.replace(' ', '_'))
+        save_tokenizer(tokenizer,  save_path)
 
-    train_collate = CustomCollate(cfg, tokenizer)
-    val_collate = CustomCollate(cfg, tokenizer)
+    train_collate = CustomCollate(cfg, tokenizer, is_train=True)
+    val_collate = CustomCollate(cfg, tokenizer, is_train=False)
     train_dataloader = DataLoader(train_set, batch_size=cfg.batch_size,
                                   num_workers=cfg.num_workers, collate_fn=train_collate)
     valid_dataloader = DataLoader(val_set, batch_size=cfg.batch_size,
