@@ -72,27 +72,26 @@ class CustomCollate(object):
         self.tokenizer = tokenizer
 
         if is_train:
-            self.transform = alb.Compose(
-                [
-                    alb.Resize(cfg.height, cfg.width),
-                    alb.ShiftScaleRotate(shift_limit=0, scale_limit=(-.15, 0), rotate_limit=1,
-                        border_mode=0, interpolation=3, value=[255, 255, 255], p=0.5),
-                    alb.GridDistortion(distort_limit=0.1, border_mode=0, interpolation=3,
-                        value=[255, 255, 255], p=.5),
-                    alb.GaussNoise(10, p=.2),
-                    alb.RandomBrightnessContrast(.05, (-.2, 0), True, p=0.2),
-                    alb.ImageCompression(95, p=.3),
-                    alb.ToGray(always_apply=True),
-                    # TODO: Calculate normalize mean variance of training data
-                    alb.Normalize(),
-                    # alb.Sharpen()
-                    alb.pytorch.ToTensorV2(),
-                ]
-            )
+            self.transform = alb.Compose([
+                        alb.Resize(112, 448),
+                        alb.ShiftScaleRotate(shift_limit=0, scale_limit=(0., 0.15), rotate_limit=1,
+                            border_mode=0, interpolation=3, value=[255, 255, 255], p=0.7),
+                        alb.GridDistortion(distort_limit=0.1, border_mode=0, interpolation=3,
+                            value=[255, 255, 255], p=.5),
+                        alb.GaussNoise(10, p=.2),
+                        alb.RandomBrightnessContrast(.05, (-.2, 0), True, p=0.2),
+                        alb.ImageCompression(95, p=.3),
+                        alb.ToGray(always_apply=True),
+                        alb.Normalize(),
+                        # alb.Sharpen()
+                        ToTensorV2(),
+                    ]
+                )
         else:
             self.transform = alb.Compose(
                 [
                     alb.Resize(cfg.height, cfg.width),
+                    alb.ImageCompression(95, p=.3),
                     alb.ToGray(always_apply=True),
                     alb.Normalize(),
                     # alb.Sharpen()
@@ -108,7 +107,10 @@ class CustomCollate(object):
         np_images, texts = zip(*batch)
         images = []
         for img in np_images:
-            images.append(self.transform(image=img)["image"])
+            try:
+                images.append(self.transform(image=img)["image"])
+            except TypeError as e:
+                continue
         images = torch.stack(images)
         labels = self.tokenizer.encode(texts)
 
@@ -116,7 +118,7 @@ class CustomCollate(object):
 
     def ready_image(self, image):
         if isinstance(image, Path):
-            image = np.array(Image.open(image).convert('RGB'))
+            image = np.array(Image.open(image))
         elif isinstance(image, Image.Image):
             image = np.array(image)
         elif isinstance(image, np.ndarray):
