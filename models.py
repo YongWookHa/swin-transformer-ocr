@@ -79,7 +79,7 @@ class SwinTransformerOCR(pl.LightningModule):
         '''
 
         encoded = self.encoder(x)
-        dec = self.decoder.generate((torch.ones(x.size(0),1)*self.bos_token).long().to(x.device), self.max_seq_len,
+        dec = self.decoder.generate(torch.LongTensor([self.bos_token]*len(x))[:, None].to(x.device), self.max_seq_len,
                                     eos_token=self.eos_token, context=encoded, temperature=self.temperature)
         return dec
 
@@ -125,7 +125,7 @@ class SwinTransformerOCR(pl.LightningModule):
                 pred = output['results']['pred'][i]
                 if gt != pred:
                     wrong_cases.append("|gt:{}/pred:{}|".format(gt, pred))
-        wrong_cases = random.sample(wrong_cases, self.cfg.batch_size//2)
+        wrong_cases = random.sample(wrong_cases, min(len(wrong_cases), self.cfg.batch_size//2))
 
         self.log('val_loss', val_loss)
         self.log('accuracy', acc)
@@ -133,6 +133,7 @@ class SwinTransformerOCR(pl.LightningModule):
         # custom text logging
         self.logger.log_text("wrong_case", "___".join(wrong_cases), self.global_step)
 
+    @torch.no_grad()
     def predict(self, image):
         dec = self(image)
         pred = self.tokenizer.decode(dec)
