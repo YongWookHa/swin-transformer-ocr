@@ -14,31 +14,32 @@ if __name__ == "__main__":
                         help="Experiment settings")
     parser.add_argument("--target", "-t", type=str, required=True,
                         help="OCR target (image or directory)")
-    parser.add_argument("--tokenizer", "-bt", type=str, required=True, 
+    parser.add_argument("--tokenizer", "-tk", type=str, required=True,
                         help="Load pre-built tokenizer")
-    parser.add_argument("--checkpoint", type=str, required=True,
+    parser.add_argument("--checkpoint", "-c", type=str, required=True,
                         help="Load model weight in checkpoint")
     args = parser.parse_args()
-    
+
     cfg = load_setting(args.setting)
     cfg.update(vars(args))
     print("setting:", cfg)
-    
+
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    
+
     # load
     tokenizer = load_tokenizer(cfg.tokenizer)
     model = SwinTransformerOCR(cfg, tokenizer)
-    model = model.load_from_checkpoint(cfg.checkpoint)
-    collate = CustomCollate(cfg, tokenizer=tokenizer, is_train=False)
-    
+    saved = torch.load(cfg.checkpoint, map_location=device)
+    model.load_state_dict(saved['state_dict'])
+    collate = CustomCollate(cfg, tokenizer=tokenizer)
+
     target = Path(cfg.target)
     if target.is_dir():
         target = list(target.glob("*.jpg")) + list(target.glob("*.png"))
     else:
         target = [target]
-    
+
     for image_fn in target:
         start = time.time()
         x = collate.ready_image(image_fn)
-        print("[{}]sec | image_fn {} : {}".format(time.time()-start, image_fn, model.predict(x)))
+        print("[{}]sec | image_fn : {}".format(time.time()-start, model.predict(x)))
