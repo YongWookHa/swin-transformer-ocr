@@ -11,7 +11,7 @@ The model in this repository encodes input image to context vector with 'shifted
 If you are not familiar with transformer ocr structure, [transformer-ocr](https://github.com/YongWookHa/transformer-ocr) would be easier to understand because it uses traditional convolution network (ResNet-v2) for encoder.
 
 ## Performance
-With private korean handwritten text dataset, the accuracy(exact match) is 95%.
+With private korean handwritten text dataset, the accuracy(exact match) is 97.6%.
 
 ## Data
 ```bash
@@ -36,7 +36,7 @@ In `settings/` directory, you can find `default.yaml`. You can set almost every 
 
 ## Train
 ```bash
-python run.py --version 0 --setting settings/default.yaml --num_workers 16
+python run.py --version 0 --setting settings/default.yaml --num_workers 16 --batch_size 128
 ```
 You can check your training log with tensorboard.  
 ```
