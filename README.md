@@ -6,7 +6,7 @@ Simple and understandable swin transformer ocr project.
 The model in this repository heavily relied on high-level open source projects like timm and x_transformers.
 And also you can find that the procedure of training is intuitive thanks to legibility of pytorch-lightning.
 
-The model in this repository encodes input image to context vector with 'shifted-window` which is swin-transformer encoding mechanism. And it decodes the vector with normal auto-regressive transformer.
+The model in this repository encodes input image to context vector with 'shifted-window` which is swin-transformer encoding mechanism. And it decodes the vector with a normal auto-regressive transformer.
 
 If you are not familiar with transformer ocr structure, [transformer-ocr](https://github.com/YongWookHa/transformer-ocr) would be easier to understand because it uses traditional convolution network (ResNet-v2) for encoder.
 
@@ -29,10 +29,10 @@ cropped_image_1.jpg\tvision-transformer-ocr
 ...
 ```
 
-You should preprocess the data first. Crop the image by word or sentence level area. Put all image data in specific directory. Ground truth information should be provided with txt file. In the txt file, write image file name and label with `\t` seperator in the same line.
+You should preprocess the data first. Crop the image by word or sentence level area. Put all image data in a specific directory. Ground truth information should be provided with a txt file. In the txt file, write the image file name and label with `\t` separator in the same line.
 
 ## Configuration
-In `settings/` directory, you can find `default.yaml`. You can set almost every hyper-parameters in that file. Copy one and edit it as your experiment version. I recommend you to run with the default setting first, before you change it.
+In `settings/` directory, you can find `default.yaml`. You can set almost every hyper-parameter in that file. Copy one and edit it as your experiment version. I recommend you to run with the default setting first, before you change it.
 
 ## Train
 ```bash
@@ -44,13 +44,14 @@ tensorboard --log_dir tb_logs --bind_all
 ```  
 
 ## Predict  
-When your model finished training, you can use your model for prediction.
+When your model finishes training, you can use your model for prediction.
 
 ```bash  
 python predict.py --setting <your_setting.yaml> --target <image_or_directory> --tokenizer <your_tokenizer_pkl> --checkpoint <saved_checkpoint>
 ```
 
-Enjoy the code.
+## Exporting to ONNX  
+You can export your model to ONNX format. It's very easy thanks to pytorch-lightning. See the [related pytorch-lightning document](https://pytorch-lightning.readthedocs.io/en/stable/common/production_inference.html).
 
 ## Citations
 
