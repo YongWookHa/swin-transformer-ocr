@@ -2,13 +2,13 @@
 ocr with [swin-transformer](https://arxiv.org/abs/2103.14030)
 
 ## Overview
-Simple and understandable swin transformer ocr project.
-The model in this repository heavily relied on high-level open source projects like timm and x_transformers.
-And also you can find that the procedure of training is intuitive thanks to legibility of pytorch-lightning.
+Simple and understandable swin-transformer OCR project.
+The model in this repository heavily relied on high-level open-source projects like [timm](https://github.com/rwightman/pytorch-image-models) and [x_transformers](https://github.com/lucidrains/x-transformers).
+And also you can find that the procedure of training is intuitive thanks to the legibility of [pytorch-lightning](https://www.pytorchlightning.ai/).
 
-The model in this repository encodes input image to context vector with 'shifted-window` which is swin-transformer encoding mechanism. And it decodes the vector with a normal auto-regressive transformer.
+The model in this repository encodes input image to context vector with 'shifted-window` which is a swin-transformer encoding mechanism. And it decodes the vector with a normal auto-regressive transformer.
 
-If you are not familiar with transformer ocr structure, [transformer-ocr](https://github.com/YongWookHa/transformer-ocr) would be easier to understand because it uses traditional convolution network (ResNet-v2) for encoder.
+If you are not familiar with transformer OCR structure, [transformer-ocr](https://github.com/YongWookHa/transformer-ocr) would be easier to understand because it uses a traditional convolution network (ResNet-v2) for the encoder.
 
 ## Performance
 With private korean handwritten text dataset, the accuracy(exact match) is 97.6%.
