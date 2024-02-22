@@ -15,7 +15,7 @@ conda create -n <env-name> python==3.7.7 && conda activate <env-name> && pip ins
 ```
 ## Clone & Installation
 ```bash
-git clone github.com/AhmadHakami/swin-ara-ocr.git && cd swin-ara-ocr && mkdir checkpoints && pip install -r requirements.txt
+git clone github.com/YongWookHa/swin-transformer-ocr.git && cd swin-transformer-ocr && mkdir checkpoints && pip install -r requirements.txt
 ```
 ## Performance
 With private korean handwritten text dataset, the accuracy(exact match) is 97.6%.
