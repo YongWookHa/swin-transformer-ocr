@@ -9,7 +9,14 @@ And also you can find that the procedure of training is intuitive thanks to the 
 The model in this repository encodes input image to context vector with 'shifted-window` which is a swin-transformer encoding mechanism. And it decodes the vector with a normal auto-regressive transformer.
 
 If you are not familiar with transformer OCR structure, [transformer-ocr](https://github.com/YongWookHa/transformer-ocr) would be easier to understand because it uses a traditional convolution network (ResNet-v2) for the encoder.
+## Installation
 
+```bash
+
+conda create -n <env-name> python==3.10 && conda activate <env-name>
+git clone github.com/AhmadHakami/swin-ara-ocr.git && cd swin-ara-ocr
+pip install -r requirements.txt
+```
 ## Performance
 With private korean handwritten text dataset, the accuracy(exact match) is 97.6%.
 
